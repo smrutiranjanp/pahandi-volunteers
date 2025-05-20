@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pahandi - Rath Yatra Volunteers</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 2rem; }
+    form { max-width: 500px; padding: 1rem; border: 1px solid #ccc; border-radius: 8px; }
+    label { display: block; margin: 0.5rem 0 0.2rem; }
+    input, button { width: 100%; padding: 0.5rem; margin-bottom: 1rem; }
+    .deity-option { margin-bottom: 0.5rem; }
+    .full { color: red; font-weight: bold; }
+  </style>
+</head>
+<body>
+
+  <h1>Pahandi - Rath Yatra Volunteers</h1>
+
+  <form id="volunteerForm">
+    <label for="name">Name*</label>
+    <input type="text" id="name" name="name" required>
+
+    <label for="email">Email ID*</label>
+    <input type="email" id="email" name="email" required>
+
+    <label for="phone">Phone Number*</label>
+    <input type="tel" id="phone" name="phone" required>
+
+    <label>Select Deity*</label>
+    <div class="deity-option">
+      <input type="radio" id="jagannath" name="deity" value="Lord Jagannath" required>
+      <label for="jagannath">Lord Jagannath (<span id="count-jagannath">15</span> seats left)</label>
+    </div>
+    <div class="deity-option">
+      <input type="radio" id="balabhadra" name="deity" value="Lord Balabhadra">
+      <label for="balabhadra">Lord Balabhadra (<span id="count-balabhadra">15</span> seats left)</label>
+    </div>
+    <div class="deity-option">
+      <input type="radio" id="subhadra" name="deity" value="Lord Subhadra">
+      <label for="subhadra">Lord Subhadra (<span id="count-subhadra">15</span> seats left)</label>
+    </div>
+    <div class="deity-option">
+      <input type="radio" id="sudarshana" name="deity" value="Lord Sudarshana">
+      <label for="sudarshana">Lord Sudarshana (<span id="count-sudarshana">15</span> seats left)</label>
+    </div>
+
+    <button type="submit">Register</button>
+  </form>
+
+  <script>
+    const maxSeats = 15;
+    const counts = {
+      'Lord Jagannath': maxSeats,
+      'Lord Balabhadra': maxSeats,
+      'Lord Subhadra': maxSeats,
+      'Lord Sudarshana': maxSeats
+    };
+
+    function updateCounts() {
+      for (const deity in counts) {
+        const id = 'count-' + deity.toLowerCase().replace("lord ", "");
+        const span = document.getElementById(id);
+        span.textContent = counts[deity] > 0 ? counts[deity] : 'FULL';
+        if (counts[deity] <= 0) {
+          span.classList.add("full");
+          document.getElementById(id.split('-')[1]).disabled = true;
+        }
+      }
+    }
+
+    document.getElementById("volunteerForm").addEventListener("submit", function(event) {
+      event.preventDefault();
+
+      const formData = new FormData(this);
+      const deity = formData.get("deity");
+
+      if (counts[deity] > 0) {
+        counts[deity]--;
+        alert("Thank you for registering!");
+        this.reset();
+        updateCounts();
+      } else {
+        alert("Sorry, no seats left for " + deity);
+      }
+    });
+
+    updateCounts();
+  </script>
+</body>
+</html>
